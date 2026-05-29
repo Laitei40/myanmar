@@ -1,0 +1,135 @@
+% \iffalse meta-comment
+%<*internal>
+\iffalse
+%</internal>
+%<*readme>
+The myanmar package
+===================
+Comprehensive Unicode-first Myanmar script support for XeLaTeX and LuaLaTeX.
+%</readme>
+%<*driver>
+\documentclass{ltxdoc}
+\usepackage[noto, burmese]{myanmar}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+\begin{document}
+  \DocInput{myanmar.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \title{The \textsf{myanmar} package}
+% \author{Myanmar TeX Project}
+% \date{2026/05/29 v1.0}
+% \maketitle
+%
+% \section{Introduction}
+% The \textsf{myanmar} package provides comprehensive typesetting support for 
+% the Myanmar script, including Burmese, Shan, Mon, and Karen variants. 
+% It requires a Unicode engine (\textsf{XeLaTeX} or \textsf{LuaLaTeX}).
+%
+% \section{Usage}
+% \DescribeMacro{\textmyanmar}
+% Use \cs{textmyanmar}\marg{text} for inline Myanmar text.
+%
+% \DescribeMacro{\myanmarnumber}
+% Converts standard Arabic digits to Myanmar numerals: \cs{myanmarnumber}\{1234\} 
+% yields \myanmarnumber{1234}.
+%
+% \StopEventually{\PrintIndex}
+%
+% \section{Implementation}
+% \begin{macrocode}
+%<*package>
+\NeedsTeXFormat{LaTeX2e}
+\RequirePackage{expl3, l3keys2e, iftex, xparse}
+
+\ProvidesExplPackage {myanmar} {2026/05/29} {1.0} 
+  {Comprehensive Myanmar script support}
+
+% Ensure Unicode engine
+\bool_if:nF { \sys_if_engine_xetex_p: || \sys_if_engine_luatex_p: }
+  {
+    \msg_new:nnnn { myanmar } { fatal-engine }
+      { The~myanmar~package~requires~XeLaTeX~or~LuaLaTeX. }
+      { You~are~using~pdfLaTeX.~Please~change~your~engine. }
+    \msg_fatal:nn { myanmar } { fatal-engine }
+  }
+
+\RequirePackage{fontspec}
+
+% 1. Key-Value Definitions
+\keys_define:nn { myanmar }
+  {
+    font      .choice:,
+    font / noto   .code:n = \tl_set:Nn \l_myanmar_font_tl { Noto~Sans~Myanmar },
+    font / padauk .code:n = \tl_set:Nn \l_myanmar_font_tl { Padauk },
+    font / tharlon.code:n = \tl_set:Nn \l_myanmar_font_tl { Tharlon },
+    font      .initial:n = noto,
+    
+    language  .choice:,
+    language / burmese    .code:n = \tl_set:Nn \l_myanmar_lang_tl { burmese },
+    language / shan       .code:n = \tl_set:Nn \l_myanmar_lang_tl { shan },
+    language / mon        .code:n = \tl_set:Nn \l_myanmar_lang_tl { mon },
+    language / sgawkaren  .code:n = \tl_set:Nn \l_myanmar_lang_tl { sgawkaren },
+    language  .initial:n = burmese,
+  }
+
+\ProcessKeysOptions { myanmar }
+
+% 2. Font Setup
+\newfontfamily\myanmarfont{\l_myanmar_font_tl}[
+  Script=Myanmar,
+  Renderer=HarfBuzz, % Crucial for LuaLaTeX shaping
+  Scale=MatchLowercase
+]
+
+% 3. Commands & Environments
+\NewDocumentCommand{\textmyanmar}{ m }
+  { {\myanmarfont #1} }
+
+\NewDocumentEnvironment{myanmar}{}
+  { \myanmarfont }
+  { }
+
+% 4. Numeral Conversion (Arabic to Myanmar U+1040 - U+1049)
+\cs_new_protected:Npn \myanmar_number:n #1
+  {
+    \tl_set:Nn \l_tmpa_tl { #1 }
+    \tl_replace_all:Nnn \l_tmpa_tl { 0 } { ๐ } % U+1040
+    \tl_replace_all:Nnn \l_tmpa_tl { 1 } { ၁ } % U+1041
+    \tl_replace_all:Nnn \l_tmpa_tl { 2 } { ၂ } % U+1042
+    \tl_replace_all:Nnn \l_tmpa_tl { 3 } { ၃ } % U+1043
+    \tl_replace_all:Nnn \l_tmpa_tl { 4 } { ၄ } % U+1044
+    \tl_replace_all:Nnn \l_tmpa_tl { 5 } { ၅ } % U+1045
+    \tl_replace_all:Nnn \l_tmpa_tl { 6 } { ၆ } % U+1046
+    \tl_replace_all:Nnn \l_tmpa_tl { 7 } { ၇ } % U+1047
+    \tl_replace_all:Nnn \l_tmpa_tl { 8 } { ၈ } % U+1048
+    \tl_replace_all:Nnn \l_tmpa_tl { 9 } { ၉ } % U+1049
+    \myanmarfont \l_tmpa_tl
+  }
+
+\NewDocumentCommand{\myanmarnumber}{ m }
+  { \myanmar_number:n { #1 } }
+
+% 5. Localization Hook (Basic implementation)
+\cs_new_protected:Npn \myanmar_setup_captions:
+  {
+    \tl_if_eq:NnT \l_myanmar_lang_tl { burmese }
+      {
+        \def\contentsname{{\myanmarfont မာတိကာ}}
+        \def\chaptername{{\myanmarfont အခန်း}}
+        \def\figurename{{\myanmarfont ပုံ}}
+        \def\tablename{{\myanmarfont ဇယား}}
+        \def\bibname{{\myanmarfont ကျမ်းကိုးစာရင်း}}
+      }
+    % Additional language conditionals go here...
+  }
+
+\AtBeginDocument{
+  \myanmar_setup_captions:
+}
+
+%</package>
+% \end{macrocode}

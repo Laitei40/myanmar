@@ -1,12 +1,21 @@
+%%
+%% This is file `myanmar.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% myanmar.dtx  (with options: `package')
+%% ----------------------------------------------------------------
+%% The myanmar package
+%% Copyright (C) 2026 by Myanmar TeX Project
+%% Released under the MIT License
+%% ----------------------------------------------------------------
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3, l3keys2e, iftex, xparse}
 
-\ProvidesExplPackage {myanmar} {2026/05/29} {1.0} 
+\ProvidesExplPackage {myanmar} {2026/05/29} {1.0}
   {Comprehensive Myanmar script support}
 
-% ---------------------------------------------------------
-% 1. Engine Check: Enforce Unicode Engines
-% ---------------------------------------------------------
 \bool_if:nF { \sys_if_engine_xetex_p: || \sys_if_engine_luatex_p: }
   {
     \msg_new:nnnn { myanmar } { fatal-engine }
@@ -17,17 +26,17 @@
 
 \RequirePackage{fontspec}
 
-% ---------------------------------------------------------
-% 2. Package Options (Key-Value)
-% ---------------------------------------------------------
 \keys_define:nn { myanmar }
   {
     font      .choice:,
-    font / noto   .code:n = \tl_set:Nn \l_myanmar_font_tl { Noto~Sans~Myanmar },
-    font / padauk .code:n = \tl_set:Nn \l_myanmar_font_tl { Padauk },
-    font / tharlon.code:n = \tl_set:Nn \l_myanmar_font_tl { Tharlon },
+    font / noto        .code:n = \tl_set:Nn \l_myanmar_font_tl { Noto~Sans~Myanmar },
+    font / pyidaungsu  .code:n = \tl_set:Nn \l_myanmar_font_tl { Pyidaungsu },
+    font / myanmartext .code:n = \tl_set:Nn \l_myanmar_font_tl { Myanmar~Text },
+    font / myanmar-text .code:n = \tl_set:Nn \l_myanmar_font_tl { Myanmar~Text },
+    font / padauk      .code:n = \tl_set:Nn \l_myanmar_font_tl { Padauk },
+    font / tharlon     .code:n = \tl_set:Nn \l_myanmar_font_tl { Tharlon },
     font      .initial:n = noto,
-    
+
     language  .choice:,
     language / burmese    .code:n = \tl_set:Nn \l_myanmar_lang_tl { burmese },
     language / shan       .code:n = \tl_set:Nn \l_myanmar_lang_tl { shan },
@@ -38,18 +47,12 @@
 
 \ProcessKeysOptions { myanmar }
 
-% ---------------------------------------------------------
-% 3. Font Setup
-% ---------------------------------------------------------
 \newfontfamily\myanmarfont{\l_myanmar_font_tl}[
   Script=Myanmar,
-  Renderer=HarfBuzz, % Crucial for proper OpenType shaping in LuaLaTeX
+  Renderer=HarfBuzz, % Crucial for LuaLaTeX shaping
   Scale=MatchLowercase
 ]
 
-% ---------------------------------------------------------
-% 4. User Commands & Environments
-% ---------------------------------------------------------
 \NewDocumentCommand{\textmyanmar}{ m }
   { {\myanmarfont #1} }
 
@@ -57,9 +60,6 @@
   { \myanmarfont }
   { }
 
-% ---------------------------------------------------------
-% 5. Numeral Conversion (Arabic to Myanmar)
-% ---------------------------------------------------------
 \cs_new_protected:Npn \myanmar_number:n #1
   {
     \tl_set:Nn \l_tmpa_tl { #1 }
@@ -79,9 +79,6 @@
 \NewDocumentCommand{\myanmarnumber}{ m }
   { \myanmar_number:n { #1 } }
 
-% ---------------------------------------------------------
-% 6. Localization
-% ---------------------------------------------------------
 \cs_new_protected:Npn \myanmar_setup_captions:
   {
     \tl_if_eq:NnT \l_myanmar_lang_tl { burmese }
@@ -94,9 +91,13 @@
         \def\appendixname{{\myanmarfont နောက်ဆက်တွဲ}}
         \def\indexname{{\myanmarfont အညွှန်း}}
       }
-    % You can add \tl_if_eq:NnT blocks for Shan, Mon, and Karen here later.
+    % Additional language conditionals go here.
   }
 
 \AtBeginDocument{
   \myanmar_setup_captions:
 }
+
+\endinput
+%%
+%% End of file `myanmar.sty'.

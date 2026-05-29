@@ -9,7 +9,7 @@ Comprehensive Unicode-first Myanmar script support for XeLaTeX and LuaLaTeX.
 %</readme>
 %<*driver>
 \documentclass{ltxdoc}
-\usepackage[noto, burmese]{myanmar}
+\usepackage[font=noto, language=burmese]{myanmar}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -25,17 +25,26 @@ Comprehensive Unicode-first Myanmar script support for XeLaTeX and LuaLaTeX.
 % \maketitle
 %
 % \section{Introduction}
-% The \textsf{myanmar} package provides comprehensive typesetting support for 
-% the Myanmar script, including Burmese, Shan, Mon, and Karen variants. 
-% It requires a Unicode engine (\textsf{XeLaTeX} or \textsf{LuaLaTeX}).
+%
+% The \textsf{myanmar} package provides Unicode-first typesetting support for
+% the Myanmar script, including Burmese, Shan, Mon, and Karen variants. It
+% requires a Unicode engine (\textsf{XeLaTeX} or Lua\LaTeX{}) and OpenType
+% Myanmar fonts.
+%
+% Supported font presets are \texttt{noto}, \texttt{pyidaungsu},
+% \texttt{myanmartext}, \texttt{padauk}, and \texttt{tharlon}.
 %
 % \section{Usage}
+%
 % \DescribeMacro{\textmyanmar}
 % Use \cs{textmyanmar}\marg{text} for inline Myanmar text.
 %
+% \DescribeEnv{myanmar}
+% Use the \texttt{myanmar} environment for paragraph or block Myanmar text.
+%
 % \DescribeMacro{\myanmarnumber}
-% Converts standard Arabic digits to Myanmar numerals: \cs{myanmarnumber}\{1234\} 
-% yields \myanmarnumber{1234}.
+% Converts standard Arabic digits to Myanmar numerals:
+% \cs{myanmarnumber}\{2026\}.
 %
 % \StopEventually{\PrintIndex}
 %
@@ -45,7 +54,7 @@ Comprehensive Unicode-first Myanmar script support for XeLaTeX and LuaLaTeX.
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3, l3keys2e, iftex, xparse}
 
-\ProvidesExplPackage {myanmar} {2026/05/29} {1.0} 
+\ProvidesExplPackage {myanmar} {2026/05/29} {1.0}
   {Comprehensive Myanmar script support}
 
 % Ensure Unicode engine
@@ -63,11 +72,14 @@ Comprehensive Unicode-first Myanmar script support for XeLaTeX and LuaLaTeX.
 \keys_define:nn { myanmar }
   {
     font      .choice:,
-    font / noto   .code:n = \tl_set:Nn \l_myanmar_font_tl { Noto~Sans~Myanmar },
-    font / padauk .code:n = \tl_set:Nn \l_myanmar_font_tl { Padauk },
-    font / tharlon.code:n = \tl_set:Nn \l_myanmar_font_tl { Tharlon },
+    font / noto        .code:n = \tl_set:Nn \l_myanmar_font_tl { Noto~Sans~Myanmar },
+    font / pyidaungsu  .code:n = \tl_set:Nn \l_myanmar_font_tl { Pyidaungsu },
+    font / myanmartext .code:n = \tl_set:Nn \l_myanmar_font_tl { Myanmar~Text },
+    font / myanmar-text .code:n = \tl_set:Nn \l_myanmar_font_tl { Myanmar~Text },
+    font / padauk      .code:n = \tl_set:Nn \l_myanmar_font_tl { Padauk },
+    font / tharlon     .code:n = \tl_set:Nn \l_myanmar_font_tl { Tharlon },
     font      .initial:n = noto,
-    
+
     language  .choice:,
     language / burmese    .code:n = \tl_set:Nn \l_myanmar_lang_tl { burmese },
     language / shan       .code:n = \tl_set:Nn \l_myanmar_lang_tl { shan },
@@ -97,7 +109,7 @@ Comprehensive Unicode-first Myanmar script support for XeLaTeX and LuaLaTeX.
 \cs_new_protected:Npn \myanmar_number:n #1
   {
     \tl_set:Nn \l_tmpa_tl { #1 }
-    \tl_replace_all:Nnn \l_tmpa_tl { 0 } { ๐ } % U+1040
+    \tl_replace_all:Nnn \l_tmpa_tl { 0 } { ၀ } % U+1040
     \tl_replace_all:Nnn \l_tmpa_tl { 1 } { ၁ } % U+1041
     \tl_replace_all:Nnn \l_tmpa_tl { 2 } { ၂ } % U+1042
     \tl_replace_all:Nnn \l_tmpa_tl { 3 } { ၃ } % U+1043
@@ -123,8 +135,10 @@ Comprehensive Unicode-first Myanmar script support for XeLaTeX and LuaLaTeX.
         \def\figurename{{\myanmarfont ပုံ}}
         \def\tablename{{\myanmarfont ဇယား}}
         \def\bibname{{\myanmarfont ကျမ်းကိုးစာရင်း}}
+        \def\appendixname{{\myanmarfont နောက်ဆက်တွဲ}}
+        \def\indexname{{\myanmarfont အညွှန်း}}
       }
-    % Additional language conditionals go here...
+    % Additional language conditionals go here.
   }
 
 \AtBeginDocument{

@@ -1,3 +1,4 @@
+% !TeX program = xelatex
 \documentclass[a4paper,11pt]{article}
 
 % --------------------------------------------------
@@ -13,21 +14,26 @@
 % --------------------------------------------------
 \usepackage{fontspec}
 \usepackage{geometry}
-\usepackage{hyperref}
-\usepackage{listings}
 \usepackage{xcolor}
-\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{fancyvrb}
+\usepackage[font=noto, language=burmese]{myanmar}
 
 % --------------------------------------------------
 % Page layout
 % --------------------------------------------------
 \geometry{margin=25mm}
+\setlist{itemsep=2pt, topsep=4pt}
+\emergencystretch=3em
 
 % --------------------------------------------------
-% Fonts (manual only)
+% Fonts for the manual
 % --------------------------------------------------
-\setmainfont{TeX Gyre Termes}
-\setsansfont{TeX Gyre Heros}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
 
 % --------------------------------------------------
 % Hyperref setup
@@ -36,27 +42,36 @@
   colorlinks=true,
   linkcolor=black,
   urlcolor=blue,
-  pdftitle={modernnewspaper Package Manual},
-  pdfauthor={Laitei}
+  pdftitle={myanmar Package Manual},
+  pdfauthor={Myanmar TeX Project}
 }
 
 % --------------------------------------------------
-% Listings setup
+% Verbatim setup
 % --------------------------------------------------
-\lstset{
-  basicstyle=\ttfamily\small,
-  frame=single,
-  breaklines=true,
-  keywordstyle=\color{blue}
+\fvset{
+  fontsize=\small,
+  frame=single
 }
+
+% --------------------------------------------------
+% Small helpers
+% --------------------------------------------------
+\newcommand{\pkg}[1]{\textsf{#1}}
+\newcommand{\opt}[1]{\texttt{#1}}
+\newcommand{\cmd}[1]{\texttt{\textbackslash #1}}
+\newenvironment{burmese}
+  {\par\smallskip\begin{myanmar}\sloppy}
+  {\par\end{myanmar}\fussy\smallskip}
 
 % --------------------------------------------------
 % Title info
 % --------------------------------------------------
-\title{\textbf{modernnewspaper}\\
-A Modern, Unicode-First Newspaper Package for LaTeX}
-\author{Laitei}
-\date{Version 0.2.1 --- January 2026}
+\title{\textbf{The \pkg{myanmar} Package}\\
+Unicode Myanmar Script Support for LaTeX\\[4pt]
+\large\textmyanmar{LaTeX အတွက် မြန်မာစာလုံးရေးစနစ် အထောက်အပံ့}}
+\author{Myanmar TeX Project}
+\date{Version 1.0 --- 2026/05/29}
 
 \begin{document}
 
@@ -65,245 +80,497 @@ A Modern, Unicode-First Newspaper Package for LaTeX}
 % ==================================================
 \section{Introduction}
 
-The \textbf{modernnewspaper} package is a modern, Unicode-first LaTeX
-package for creating newspaper-style documents. It is designed as a
-clean, stable, and extensible alternative to the legacy
-\texttt{newspaper} package.
+The \pkg{myanmar} package provides a compact interface for typesetting
+Myanmar-script text in LaTeX documents. It is designed for Unicode input and
+OpenType fonts, and therefore works with XeLaTeX and LuaLaTeX only.
 
-The package supports multilingual content, multi-column layouts,
-right-to-left (RTL) scripts, custom drop caps, column-safe images, and
-newspaper-style headers, while remaining suitable for professional print
-output.
+\begin{burmese}
+\pkg{myanmar} package က LaTeX စာတမ်းတွေမှာ မြန်မာစာကို Unicode စနစ်နဲ့ 
+ရေးလို့ရအောင် လုပ်ပေးထားတဲ့ package လေးပါ။ OpenType font တွေကို 
+သုံးထားတဲ့အတွက် XeLaTeX ဒါမှမဟုတ် LuaLaTeX နဲ့ပဲ compile လုပ်လို့ရပါမယ်။
+\end{burmese}
+
+The package currently provides:
+
+\begin{itemize}
+  \item font selection for common Myanmar fonts;
+  \item an inline command for Myanmar text;
+  \item a block environment for Myanmar text;
+  \item Arabic digit to Myanmar digit conversion;
+  \item a basic Burmese localization hook for common document strings.
+\end{itemize}
+
+\begin{burmese}
+ဒီ package မှာ လူသုံးများတဲ့ မြန်မာ font တွေရွေးတာ၊ စာကြောင်းထဲ မြန်မာစာညှပ်ထည့်တာ၊ 
+စာပိုဒ်လိုက် မြန်မာစာရေးတာ၊ ဂဏန်းတွေကို မြန်မာဂဏန်းပြောင်းတာနဲ့ အခြေခံ Burmese localization တွေ ပါဝင်ပါတယ်။
+\end{burmese}
+
+This manual describes the public interface implemented by
+\texttt{myanmar.sty}.
+
+\begin{burmese}
+ဒီလမ်းညွှန်က \texttt{myanmar.sty} ထဲမှာပါတဲ့ အသုံးပြုသူတွေအတွက် command တွေနဲ့ 
+option တွေကို ရှင်းပြပေးထားပါတယ်။
+\end{burmese}
 
 % ==================================================
 \section{Requirements}
 
-This package \textbf{requires} one of the following engines:
+The package requires a Unicode-aware LaTeX engine:
 
 \begin{itemize}
   \item XeLaTeX
   \item LuaLaTeX
 \end{itemize}
 
-The package does \textbf{not} support pdfLaTeX, as full Unicode support
-is mandatory.
+\begin{burmese}
+ဒီ package ကို သုံးဖို့ Unicode ကို အထောက်အပံ့ပေးတဲ့ LaTeX engine လိုအပ်ပါတယ်။ 
+XeLaTeX ဒါမှမဟုတ် LuaLaTeX ကို သုံးပေးပါ။
+\end{burmese}
+
+The package intentionally stops with an error under pdfLaTeX. Myanmar script
+typesetting needs Unicode input and OpenType shaping, which are provided through
+\pkg{fontspec}.
+
+\begin{burmese}
+pdfLaTeX နဲ့ compile လုပ်ရင်တော့ package က error ပြပြီး ရပ်သွားပါလိမ့်မယ်။ 
+မြန်မာစာကို သေသေချာချာ ပုံဖော်နိုင်ဖို့ Unicode input နဲ့ OpenType shaping 
+လိုအပ်လို့ \pkg{fontspec} ကို သုံးထားတာပါ။
+\end{burmese}
+
+The following LaTeX packages are loaded by \pkg{myanmar}:
+
+\begin{itemize}
+  \item \pkg{expl3}
+  \item \pkg{l3keys2e}
+  \item \pkg{iftex}
+  \item \pkg{xparse}
+  \item \pkg{fontspec}
+\end{itemize}
+
+At least one supported Myanmar font must be installed on the system. The
+package currently supports \texttt{Noto Sans Myanmar}, \texttt{Pyidaungsu},
+\texttt{Myanmar Text}, \texttt{Padauk}, and \texttt{Tharlon}.
+
+\begin{burmese}
+System ထဲမှာ support ပေးထားတဲ့ မြန်မာ font အနည်းဆုံးတစ်ခုတော့ install လုပ်ထားရပါမယ်။ 
+လက်ရှိ package က \texttt{Noto Sans Myanmar}, \texttt{Pyidaungsu}, 
+\texttt{Myanmar Text}, \texttt{Padauk}, နဲ့ \texttt{Tharlon} font တွေကို 
+အထောက်အပံ့ပေးထားပါတယ်။
+\end{burmese}
 
 % ==================================================
 \section{Installation}
 
-\subsection{Local Installation}
+The documented package source is \texttt{myanmar.dtx}. The installer is
+\texttt{myanmar.ins}. To generate \texttt{myanmar.sty}, run:
 
-Copy \texttt{modernnewspaper.sty} into the same directory as your
-\texttt{.tex} file.
+\begin{Verbatim}
+latex myanmar.ins
+\end{Verbatim}
 
-\subsection{User Installation}
+\begin{burmese}
+Package ရဲ့ source file က \texttt{myanmar.dtx} ဖြစ်ပြီး installer file ကတော့ 
+\texttt{myanmar.ins} ပါ။ \texttt{myanmar.sty} ကို ထုတ်ယူဖို့ အပေါ်က 
+command ကို run ပေးပါ။
+\end{burmese}
 
-Alternatively, install it into your local \texttt{texmf} tree:
+For local use, place the generated \texttt{myanmar.sty} beside your document or
+compile from the package root directory.
 
-\begin{verbatim}
-~/texmf/tex/latex/modernnewspaper/
-\end{verbatim}
+\begin{burmese}
+Local document မှာ သုံးချင်ရင်တော့ ထွက်လာတဲ့ \texttt{myanmar.sty} ကို 
+ကိုယ့်ရဲ့ \texttt{.tex} file နဲ့ folder အတူတူ ထားပေးပါ။ ဒါမှမဟုတ်လည်း package ရဲ့ root 
+directory ကနေ compile လုပ်လို့ရပါတယ်။
+\end{burmese}
 
-% ==================================================
-\section{Basic Usage}
+For a user-level installation, place \texttt{myanmar.sty} in a local TeX tree,
+for example:
 
-Load the package in the document preamble:
+\begin{Verbatim}
+texmf/tex/latex/myanmar/myanmar.sty
+\end{Verbatim}
 
-\begin{lstlisting}
-\usepackage{modernnewspaper}
-\end{lstlisting}
-
-% ==================================================
-\section{Metadata Commands}
-
-The following commands configure the newspaper metadata:
-
-\begin{lstlisting}
-\SetPaperName{Modern Newspaper}
-\SetPaperSlogan{Informing the future}
-\SetPaperLocation{Yangon, Myanmar}
-\SetPaperWebsite{https://example.com}
-\SetPaperVolume{1}
-\SetPaperIssue{5}
-\SetPaperDate{\today}
-\end{lstlisting}
+\begin{burmese}
+User-level installation အတွက်ဆိုရင်တော့ \texttt{myanmar.sty} ကို local TeX tree 
+ထဲ ထည့်လို့ရပါတယ်။ TeX distribution အပေါ်မူတည်ပြီး filename database ကို refresh 
+လုပ်ပေးဖို့တော့ လိုနိုင်ပါတယ်။
+\end{burmese}
 
 % ==================================================
-\section{Masthead}
+\section{Loading the Package}
 
-To typeset the main newspaper masthead (front page only), use:
+Load the package in the preamble:
 
-\begin{lstlisting}
-\MakePaperHeader
-\end{lstlisting}
+\begin{Verbatim}
+\usepackage{myanmar}
+\end{Verbatim}
 
-This command prints the paper name, slogan, location, volume, issue,
-date, and website URL.
+You can also select a font and language:
 
-Inner pages typically use a simplified custom header.
+\begin{Verbatim}
+\usepackage[font=noto, language=burmese]{myanmar}
+\end{Verbatim}
 
-% ==================================================
-\section{Columns}
+\begin{burmese}
+Package ကို document ရဲ့ preamble မှာ load လုပ်ပေးပါ။ Font နဲ့ language ကိုလည်း 
+option အနေနဲ့ ရွေးလို့ရပါတယ်။
+\end{burmese}
 
-Newspaper content is usually set in multiple columns.
+Compile the document with XeLaTeX or LuaLaTeX:
 
-\begin{lstlisting}
-\BeginNewsColumns{3}
-% content
-\EndNewsColumns
-\end{lstlisting}
+\begin{Verbatim}
+xelatex document.tex
+lualatex document.tex
+\end{Verbatim}
 
-The number of columns may be adjusted as needed.
-
-% ==================================================
-\section{Articles}
-
-Articles are created using the \texttt{article} environment together
-with headline and byline commands.
-
-\subsection{Headline}
-
-\begin{lstlisting}
-\headline{Article Title}
-\end{lstlisting}
-
-\subsection{Byline}
-
-\begin{lstlisting}
-\byline{Author Name}
-\end{lstlisting}
-
-The word ``By'' may be localized:
-
-\begin{lstlisting}
-\SetByWord{بقلم}
-\end{lstlisting}
-
-\subsection{Article Environment}
-
-\begin{lstlisting}
-\begin{article}
-\headline{Sample Article}
-\byline{Editor}
-
-This is the article body text.
-\end{article}
-\end{lstlisting}
+\begin{burmese}
+Compile လုပ်တဲ့အခါ XeLaTeX ဒါမှမဟုတ် LuaLaTeX ကိုပဲ သုံးပေးပါ။
+\end{burmese}
 
 % ==================================================
-\section{Drop Caps}
+\section{Package Options}
 
-The package provides a Unicode-safe drop-cap command that works in
-multi-column layouts and with all scripts.
+The package uses key-value options.
 
-\begin{lstlisting}
-\DropCap{E}nglish text starts here.
-\end{lstlisting}
+\begin{burmese}
+Package option တွေကို key-value ပုံစံနဲ့ သတ်မှတ်ထားပါတယ်။
+\end{burmese}
 
-This implementation avoids the \texttt{lettrine} package to ensure
-stability with Unicode engines.
+\subsection{\opt{font}}
+
+The \opt{font} option selects the Myanmar font family.
+
+\begin{burmese}
+\opt{font} option ကတော့ သုံးချင်တဲ့ မြန်မာ font family ကို ရွေးပေးတာပါ။
+\end{burmese}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Option & Font name \\
+\midrule
+\opt{font=noto} & \texttt{Noto Sans Myanmar} \\
+\opt{font=pyidaungsu} & \texttt{Pyidaungsu} \\
+\opt{font=myanmartext} & \texttt{Myanmar Text} \\
+\opt{font=myanmar-text} & \texttt{Myanmar Text} alias \\
+\opt{font=padauk} & \texttt{Padauk} \\
+\opt{font=tharlon} & \texttt{Tharlon} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The default is:
+
+\begin{Verbatim}
+font=noto
+\end{Verbatim}
+
+\begin{burmese}
+Default font option ကတော့ \opt{font=noto} ပါ။
+\end{burmese}
+
+\subsection{\opt{language}}
+
+The \opt{language} option records the target Myanmar-script language variant.
+
+\begin{burmese}
+\opt{language} option ကတော့ သုံးချင်တဲ့ မြန်မာ script language variant ကို 
+သတ်မှတ်ပေးတာပါ။
+\end{burmese}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Option & Language \\
+\midrule
+\opt{language=burmese} & Burmese \\
+\opt{language=shan} & Shan \\
+\opt{language=mon} & Mon \\
+\opt{language=sgawkaren} & S'gaw Karen \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The default is:
+
+\begin{Verbatim}
+language=burmese
+\end{Verbatim}
+
+At present, only \opt{language=burmese} has localization behavior. The other
+language values are accepted for future language-specific extensions.
+
+\begin{burmese}
+လောလောဆယ်တော့ \opt{language=burmese} အတွက်ပဲ localization အလုပ်လုပ်ဦးမှာပါ။ 
+ကျန်တဲ့ language option တွေကတော့ နောက်ပိုင်း တိုးချဲ့လာရင် သုံးလို့ရအောင် 
+လက်ခံပေးထားတာပါ။
+\end{burmese}
 
 % ==================================================
-\section{Images}
+\section{User Commands}
 
-Images are inserted using a column-safe command:
+\subsection{\cmd{textmyanmar}}
 
-\begin{lstlisting}
-\ArticleImage{0.9\columnwidth}{example-image}{Caption text}
-\end{lstlisting}
+Use \cmd{textmyanmar} for short inline Myanmar text:
 
-This approach avoids floating conflicts inside multi-column layouts.
+\begin{Verbatim}
+This is inline Myanmar: \textmyanmar{<Myanmar text>}.
+\end{Verbatim}
 
-% ==================================================
-\section{RTL Support}
+\begin{burmese}
+စာကြောင်းထဲမှာ မြန်မာစာ တိုတိုလေးတွေရေးဖို့ \cmd{textmyanmar} ကို သုံးပေးပါ။
+\end{burmese}
 
-Right-to-left scripts such as Arabic and Hebrew are supported:
-
-\begin{lstlisting}
-\EnableRTL
-\SetByWord{بقلم}
-
-\begin{article}
-\headline{عنوان المقال}
-\byline{الكاتب}
-
-نص عربي تجريبي.
-\end{article}
-
-\DisableRTL
-\SetByWord{By}
-\end{lstlisting}
-
-% ==================================================
-\section{Unicode Support}
-
-The \textbf{modernnewspaper} package fully supports Unicode text across
-multiple scripts, provided appropriate fonts are installed.
-
-Supported scripts include:
+Rendered example:
 
 \begin{quote}
-မြန်မာစာ · العربية · हिन्दी · 中文 · English
+This is inline Myanmar: \textmyanmar{မြန်မာစာ}.
 \end{quote}
 
-Fonts are selected explicitly per script to avoid missing glyphs.
+\subsection{\texttt{myanmar} environment}
+
+Use the \texttt{myanmar} environment for paragraph or block text:
+
+\begin{Verbatim}
+\begin{myanmar}
+<Myanmar paragraph text>
+\end{myanmar}
+\end{Verbatim}
+
+\begin{burmese}
+မြန်မာစာပိုဒ်လိုက် ဒါမှမဟုတ် block text အနေနဲ့ရေးဖို့ \texttt{myanmar} environment 
+ကို သုံးပေးပါ။
+\end{burmese}
+
+Rendered example:
+
+\begin{quote}
+\begin{myanmar}
+မြန်မာစာသည် မြန်မာနိုင်ငံ၏ ရုံးသုံးဘာသာစကားဖြစ်သည်။
+\end{myanmar}
+\end{quote}
+
+\subsection{\cmd{myanmarnumber}}
+
+Use \cmd{myanmarnumber} to convert Arabic digits to Myanmar digits:
+
+\begin{Verbatim}
+\myanmarnumber{2026}
+\end{Verbatim}
+
+\begin{burmese}
+အင်္ဂလိပ်ဂဏန်း (Arabic digit) တွေကို မြန်မာဂဏန်း ပြောင်းချင်ရင် \cmd{myanmarnumber} ကို 
+သုံးပေးပါ။
+\end{burmese}
+
+Rendered example:
+
+\begin{quote}
+\myanmarnumber{2026}
+\end{quote}
+
+The current implementation performs direct replacement of the characters
+\texttt{0} through \texttt{9}. It is not a full number formatter.
+
+\begin{burmese}
+လောလောဆယ် လုပ်ပေးထားတာက \texttt{0} ကနေ \texttt{9} အထိ ဂဏန်းတွေကို 
+တိုက်ရိုက် အစားထိုးပေးရုံပဲဖြစ်ပြီး full number formatter တော့ မဟုတ်သေးပါဘူး။
+\end{burmese}
 
 % ==================================================
-\section{Section Banners}
+\section{Font Setup}
 
-Newspaper-style section banners may be created using horizontal rules
-with centered text:
+Internally, the package defines:
 
-\begin{lstlisting}
-\SectionBanner{World News}
-\end{lstlisting}
+\begin{Verbatim}
+\newfontfamily\myanmarfont{<selected font>}[
+  Script=Myanmar,
+  Renderer=HarfBuzz,
+  Scale=MatchLowercase
+]
+\end{Verbatim}
 
-This produces a compact banner with rules above and below the text.
+The \texttt{Renderer=HarfBuzz} option is useful for LuaLaTeX shaping. XeLaTeX
+may warn that this renderer option is LuaTeX-only; that warning is expected and
+does not normally prevent output.
+
+\begin{burmese}
+Package ထဲမှာတော့ ကိုယ်ရွေးလိုက်တဲ့ font ကို \cmd{myanmarfont} အနေနဲ့ 
+သတ်မှတ်ပေးထားပါတယ်။ \texttt{Renderer=HarfBuzz} က LuaLaTeX မှာ shaping 
+လုပ်ဖို့အတွက် အသုံးဝင်ပါတယ်။ XeLaTeX သုံးရင်တော့ ဒီ option က LuaTeX အတွက်ပဲဆိုပြီး 
+warning တက်လာနိုင်ပေမယ့် ပုံမှန်အားဖြင့်တော့ output ထုတ်တာကို ပြဿနာမပေးပါဘူး။
+\end{burmese}
 
 % ==================================================
-\section{Limitations}
+\section{Localization}
 
-Current limitations include:
+At the beginning of the document, the package runs its localization hook. When
+\opt{language=burmese} is selected, it redefines several common document strings
+with Myanmar text.
+
+\begin{burmese}
+Document စတဲ့အချိန်မှာ package က localization hook ကို run ပါလိမ့်မယ်။ 
+\opt{language=burmese} ကို ရွေးထားရင် document ထဲက စာသားတချို့ကို 
+မြန်မာလို အလိုအလျောက် ပြောင်းပေးသွားမှာပါ။
+\end{burmese}
+
+The current hook covers:
 
 \begin{itemize}
-  \item No automatic font switching (manual selection required)
-  \item No theme presets
-  \item No automatic page headers
+  \item \cmd{contentsname}
+  \item \cmd{chaptername}
+  \item \cmd{figurename}
+  \item \cmd{tablename}
+  \item \cmd{bibname}
+  \item \cmd{appendixname}
+  \item \cmd{indexname}
 \end{itemize}
 
-These limitations are intentional to preserve layout stability.
+\begin{burmese}
+ဒီသတ်မှတ်ချက်တွေက အခြေခံအဆင့်လောက်ပဲ ရှိပါသေးတယ်။ နောက်ပိုင်း version တွေမှာတော့ 
+ဗမာ၊ ရှမ်း၊ မွန်နဲ့ စကောကရင် တွေအတွက် ပိုပြီးပြည့်စုံတဲ့ language support တွေ 
+ထည့်ပေးလာနိုင်ပါတယ်။
+\end{burmese}
 
 % ==================================================
-\section{Roadmap}
+\section{Complete Example}
 
-Planned improvements include:
+\begin{Verbatim}
+% !TeX program = xelatex
+\documentclass{article}
+
+\usepackage[font=pyidaungsu, language=burmese]{myanmar}
+
+\begin{document}
+
+\section{English Header}
+This is standard English text.
+
+\section{\textmyanmar{<Myanmar heading>}}
+\begin{myanmar}
+<Myanmar paragraph text>
+\end{myanmar}
+
+Here is a number conversion: \myanmarnumber{2026}
+
+\end{document}
+\end{Verbatim}
+
+\begin{burmese}
+အပေါ်က sample မှာ \opt{font=pyidaungsu} ကို သုံးပြထားပါတယ်။ ကိုယ့် system မှာ 
+Pyidaungsu မရှိဘူးဆိုရင် \opt{font=noto}, \opt{font=myanmartext}, 
+\opt{font=padauk}, ဒါမှမဟုတ် \opt{font=tharlon} ကို ပြောင်းသုံးလို့ရပါတယ်။
+\end{burmese}
+
+% ==================================================
+\section{Building This Manual}
+
+From the repository root, run:
+
+\begin{Verbatim}
+xelatex docs/manual.tex
+\end{Verbatim}
+
+or:
+
+\begin{Verbatim}
+lualatex docs/manual.tex
+\end{Verbatim}
+
+If \texttt{latexmkrc} is present, this should also work:
+
+\begin{Verbatim}
+latexmk docs/manual.tex
+\end{Verbatim}
+
+\begin{burmese}
+ဒီ manual ကို build လုပ်ချင်ရင် repository ရဲ့ root ကနေ အပေါ်က command တွေကို 
+run ပေးပါ။ \texttt{latexmkrc} ဖိုင်ရှိရင်တော့ \texttt{latexmk} က XeLaTeX သုံးဖို့ 
+အသင့်ပြင်ပေးထားနိုင်ပါတယ်။
+\end{burmese}
+
+% ==================================================
+\section{Troubleshooting}
+
+\subsection{The package says pdfLaTeX is not supported}
+
+Compile with XeLaTeX or LuaLaTeX instead:
+
+\begin{Verbatim}
+xelatex document.tex
+\end{Verbatim}
+
+\begin{burmese}
+pdfLaTeX ကို မသုံးပါနဲ့။ XeLaTeX ဒါမှမဟုတ် LuaLaTeX နဲ့ပဲ compile လုပ်ပေးပါ။
+\end{burmese}
+
+\subsection{A Myanmar font cannot be found}
+
+Install the selected font or choose another supported font option:
+
+\begin{Verbatim}
+\usepackage[font=pyidaungsu]{myanmar}
+\end{Verbatim}
+
+\begin{burmese}
+ရွေးလိုက်တဲ့ font ကို ရှာမတွေ့ရင် အဲဒီ font ကို အရင် install လုပ်ပေးပါ။ 
+ဒါမှမဟုတ်လည်း package က အထောက်အပံ့ပေးထားတဲ့ တခြား font option တစ်ခုခုကို 
+ရွေးသုံးလို့ရပါတယ်။
+\end{burmese}
+
+\subsection{Myanmar text appears as empty boxes}
+
+The active font may not contain Myanmar glyphs. Use one of the supported
+Myanmar fonts and wrap Myanmar text in \cmd{textmyanmar} or the
+\texttt{myanmar} environment.
+
+\begin{burmese}
+စာလုံးတွေက အတုံးလေး (box) တွေလို ဖြစ်နေရင် ကိုယ်သုံးနေတဲ့ font မှာ Myanmar glyph 
+မပါလို့ဖြစ်နိုင်ပါတယ်။ Package က ထောက်ပံ့ပေးထားတဲ့ မြန်မာ font တစ်ခုခုကို သုံးပြီး 
+မြန်မာစာတွေကို \cmd{textmyanmar} ဒါမှမဟုတ် \texttt{myanmar} environment ထဲ 
+ထည့်ရေးပေးပါ။
+\end{burmese}
+
+\subsection{Shaping looks incorrect}
+
+Use XeLaTeX or LuaLaTeX with a proper OpenType Myanmar font. For LuaLaTeX,
+HarfBuzz rendering is requested by the package.
+
+\begin{burmese}
+စာလုံးပုံစံတွေ အချိတ်အဆက် မမှန်ရင် OpenType Myanmar font သုံးပြီး XeLaTeX 
+ဒါမှမဟုတ် LuaLaTeX နဲ့ compile လုပ်ကြည့်ပါ။ LuaLaTeX သုံးမယ်ဆိုရင် package က 
+HarfBuzz rendering ကို တောင်းဆိုထားပါတယ်။
+\end{burmese}
+
+% ==================================================
+\section{Current Limitations}
 
 \begin{itemize}
-  \item Automatic font selection per script
-  \item Newspaper class file (\texttt{modernnewspaper.cls})
-  \item Running headers and page numbers
-  \item Theme presets
-  \item CTAN submission
+  \item Only five font choices are currently predefined, plus the
+    \opt{font=myanmar-text} alias.
+  \item Language-specific behavior is currently implemented only for Burmese.
+  \item Number conversion is simple digit replacement.
+  \item The package does not provide Myanmar line-breaking or hyphenation data.
+  \item The package does not yet provide separate language mapping files.
 \end{itemize}
+
+\begin{burmese}
+လက်ရှိ version မှာ font choice ငါးခုနဲ့ \opt{font=myanmar-text} alias ကိုပဲ 
+ထည့်ပေးထားပါသေးတယ်။ Language-specific behavior အနေနဲ့လည်း ဗမာစာ (Burmese) အတွက်ပဲ 
+အခြေခံအဆင့် ပါပါသေးတယ်။ ဂဏန်းပြောင်းတဲ့နေရာမှာလည်း digit ကို အစားထိုးပေးရုံပဲဖြစ်ပြီး 
+line-breaking တွေ၊ hyphenation data တွေတော့ မပါသေးပါဘူး။
+\end{burmese}
 
 % ==================================================
 \section{License}
 
-This package is distributed under the
-\textbf{LaTeX Project Public License (LPPL) v1.3c}.
+This repository is distributed under the MIT License. See the \texttt{LICENSE}
+file for the full license text.
 
-See the \texttt{LICENSE} file or visit:
-\begin{center}
-\url{https://www.latex-project.org/lppl.txt}
-\end{center}
-
-% ==================================================
-\section{Contact}
-
-Project repository:
-
-\begin{center}
-\url{https://github.com/Laitei40/modernnewspaper}
-\end{center}
+\begin{burmese}
+ဒီ repository ကို MIT License နဲ့ ဖြန့်ဝေပေးထားပါတယ်။ License အပြည့်အစုံကိုတော့ 
+\texttt{LICENSE} file ထဲမှာ ဝင်ဖတ်လို့ရပါတယ်။
+\end{burmese}
 
 \end{document}

@@ -1,19 +1,207 @@
 % !TeX program = xelatex
-\documentclass{article}
+\documentclass[11pt, a4paper, openany]{book} % Changed to a4paper
 
-% Use font=pyidaungsu or font=myanmartext if those fonts are installed.
-\usepackage[font=pyidaungsu, language=burmese]{myanmar}
+% --------------------------------------------------
+% Packages & Layout configuration
+% --------------------------------------------------
+\usepackage[
+  top=25mm,
+  bottom=25mm,
+  left=20mm,
+  right=20mm,
+]{geometry}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{parskip}
+\usepackage{microtype}
+
+% Load myanmar package with Pyidaungsu
+\usepackage[font=pyidaungsu, language=burmese]{../myanmar}
+
+% --------------------------------------------------
+% Modern Document Styling
+% --------------------------------------------------
+\definecolor{brandcolor}{HTML}{0D47A1} % Modern Dark Blue
+\definecolor{accentcolor}{HTML}{D32F2F} % Accent Red
+
+% Override Chapter and Section counters globally
+\renewcommand{\thechapter}{\myanmarnumber{\arabic{chapter}}}
+\renewcommand{\thesection}{\myanmarnumber{\arabic{chapter}}.\myanmarnumber{\arabic{section}}}
+
+% Modern Chapter Headers
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\color{brandcolor}}
+  {\raggedleft\large\textmyanmar{အခန်း} \Huge \thechapter}
+  {1ex}
+  {\titlerule\vspace{2ex}\huge\raggedleft}
+  [\vspace{2ex}]
+\titlespacing*{\chapter}{0pt}{30pt}{20pt}
+
+% Headers & Footers
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RO,LE]{\color{gray}\textmyanmar{\leftmark}}
+\fancyfoot[C]{\large\textbf{\thepage}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{gray}\leaders\hrule height \headrulewidth\hfill}}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=brandcolor,
+  urlcolor=accentcolor,
+  pdftitle={Myanmar Modern Book},
+}
 
 \begin{document}
 
-\section{English Header}
-This is standard English text.
+% ==================================================
+% FRONT MATTER
+% ==================================================
+\frontmatter
+% LaTeX naturally uses i, ii, iii here. We do not override it.
 
-\section{\textmyanmar{မြန်မာ}}
+% --------------------------------------------------
+% Modern Cover Page
+% --------------------------------------------------
+\begin{titlepage}
+    \begin{center}
+        \vspace*{4cm}
+        
+        {\color{brandcolor}\rule{\linewidth}{2mm}}\\[1.5em]
+        
+        {\Huge\bfseries\textmyanmar{ခြင်္သေ့နှင့် ကြွက်}}\\[1em]
+        
+        {\Large\textmyanmar{မြန်မာပုံပြင်တိုများနှင့် စကားပုံများ}}
+        
+        \vspace{1.5em}
+        {\color{brandcolor}\rule{\linewidth}{2mm}}
+        
+        \vfill
+        
+        {\Large\textmyanmar{ရေးသားသူ}}\\[0.5em]
+        {\Large \textbf{\textmyanmar{Myanmar TeX Project}}}\\[2em]
+        
+        {\large\textmyanmar{\myanmarnumber{2026} ခုနှစ်၊ မေလ}}
+    \end{center}
+\end{titlepage}
+
+% --------------------------------------------------
+% Preface
+% --------------------------------------------------
+\chapter*{\textmyanmar{အမှာစာ}}
+\addcontentsline{toc}{chapter}{\textmyanmar{အမှာစာ}}
+
 \begin{myanmar}
-မြန်မာစာသည် မြန်မာနိုင်ငံ၏ ရုံးသုံးဘာသာစကားဖြစ်သည်။
+ဤစာအုပ်ငယ်သည် \texttt{myanmar} package ၏ စွမ်းဆောင်ရည်ကို သက်သေပြရန်အတွက် ခေတ်မီစာအုပ်ပုံစံ (Modern Book Style) ဖြင့် ပြင်ဆင်ထုတ်ဝေထားခြင်း ဖြစ်ပါသည်။ 
+
+စာမျက်နှာနံပါတ်များ ပြောင်းလဲခြင်း အပါအဝင် အခန်းအမည်များနှင့် မာတိကာများအားလုံးကို မြန်မာဂဏန်း၊ မြန်မာစာသားများဖြင့် အလိုအလျောက် ပြောင်းလဲဖော်ပြနိုင်ရန် Preamble တွင် အဆင့်မြှင့်တင်မှုများ ပြုလုပ်ထားပါသည်။ ယခုအခါ LaTeX မှတစ်ဆင့် နိုင်ငံတကာအဆင့်မီ မြန်မာစာအုပ်များကို အလွယ်တကူ စာစီစာရိုက် ပြုလုပ်နိုင်ပြီ ဖြစ်ပါသည်။
 \end{myanmar}
 
-Here is a number conversion: \myanmarnumber{2026}
+\clearpage
+
+% --------------------------------------------------
+% Table of Contents
+% --------------------------------------------------
+\tableofcontents
+
+% ==================================================
+% MAIN MATTER
+% ==================================================
+\mainmatter
+% NOW we apply Myanmar page numbering for the main content chapters
+\renewcommand{\thepage}{\myanmarnumber{\arabic{page}}}
+
+% --------------------------------------------------
+% Chapter 1: The Lion and The Mouse
+% --------------------------------------------------
+\chapter{\textmyanmar{ခြင်္သေ့နှင့် ကြွက်}}
+
+\begin{myanmar}
+တောအုပ်ကြီးတစ်ခုအတွင်းတွင် ခွန်အားကြီးမားသော ခြင်္သေ့ကြီးတစ်ကောင်သည် သစ်ပင်ရိပ်တွင် အိပ်မောကျနေလေသည်။ ထိုအချိန်တွင် ကြွက်ငယ်လေးတစ်ကောင်သည် ဆော့ကစားရင်း ခြင်္သေ့ကြီး၏ ကိုယ်ပေါ်သို့ မတော်တဆ ပြေးတက်မိသွားသည်။ ခြင်္သေ့ကြီးလည်း လန့်နိုးသွားပြီး ကြွက်ငယ်လေးကို ဒေါသတကြီးဖြင့် ဖမ်းဆီးလိုက်သည်။
+
+ကြွက်ငယ်လေးက "အို ခြင်္သေ့မင်းကြီး၊ ကျွန်တော့်ကို ချမ်းသာပေးပါ။ ကျွန်တော် အသက်အန္တရာယ်မှ လွတ်မြောက်ခွင့်ရပါက တစ်နေ့နေ့တွင် မင်းကြီး၏ ကျေးဇူးကို ပြန်လည်ဆပ်ပါမည်" ဟု တုန်ရီစွာဖြင့် တောင်းပန်လေသည်။ ခြင်္သေ့ကြီးသည် ကြွက်ငယ်လေး၏ စကားကို ကြားသောအခါ ရယ်မောလိုက်ပြီး သနားသဖြင့် လွှတ်ပေးလိုက်သည်။
+
+အချိန်အနည်းငယ် ကြာပြီးနောက်...
+
+ခြင်္သေ့ကြီးသည် တောထဲတွင် အစာရှာထွက်ရင်း မုဆိုးများ ထောင်ထားသော ပိုက်ကွန်တွင် ငြိတွယ်မိသွားသည်။ ခြင်္သေ့ကြီးသည် ရုန်းထွက်ရန် ကြိုးစားသော်လည်း မအောင်မြင်ဘဲ ကျယ်လောင်စွာ ဟိန်းဟောက်၍ အကူအညီတောင်းနေရသည်။ 
+
+ထိုအသံကို ကြွက်ငယ်လေး ကြားသောအခါ ချက်ချင်းပြေးလာပြီး သူ၏ ထက်မြက်သော သွားများဖြင့် ပိုက်ကွန်ကြိုးများကို ကိုက်ဖြတ်ပေးခဲ့သည်။ နောက်ဆုံးတွင် ခြင်္သေ့ကြီးသည် ပိုက်ကွန်မှ လွတ်မြောက်သွားပြီး ကြွက်ငယ်လေးကို အထူးပင် ကျေးဇူးတင်ရှိသွားလေသည်။
+\end{myanmar}
+
+\vspace{2em}
+\noindent
+\textbf{\textcolor{brandcolor}{\textmyanmar{ပုံပြင်၏ သင်ခန်းစာ --}}} 
+\begin{myanmar}
+ခန္ဓာကိုယ် သေးငယ်သော်လည်း သူတစ်ပါးကို အကျိုးပြုနိုင်စွမ်း ရှိသည်။ ကျေးဇူးပြုဖူးသူအား ကျေးဇူးဆပ်ရန် မမေ့အပ်ပေ။
+\end{myanmar}
+
+% --------------------------------------------------
+% Chapter 2: Proverbs
+% --------------------------------------------------
+\chapter{\textmyanmar{မြန်မာ့စကားပုံများ}}
+
+\begin{myanmar}
+မြန်မာလူမျိုးတို့၏ နေ့စဉ်ဘဝ၊ တွေးခေါ်မှုနှင့် ယဉ်ကျေးမှုတို့ကို ထင်ဟပ်စေသော အဖိုးတန် စကားပုံတချို့ကို အောက်တွင် ဖော်ပြထားပါသည်။ မြန်မာဂဏန်းစဉ်များကို အလိုအလျောက် ရေတွက်ပြသထားပါသည်။
+\end{myanmar}
+
+\vspace{1.5em}
+
+\begin{enumerate}
+    % Customizing the enumerate list to use Myanmar Numbers globally
+    \renewcommand{\labelenumi}{\textcolor{accentcolor}{\textbf{\textmyanmar{\myanmarnumber{\arabic{enumi}}} \textmyanmar{။}}}}
+    
+    \item \begin{myanmar}\textbf{အချိန်နှင့် ဒီရေသည် လူကိုမစောင့်။}\\
+    မည်သည့်အရာကမျှ အချိန်ကုန်သွားခြင်းကို တားဆီး၍ မရနိုင်ပါ။ အချိန်၏ တန်ဖိုးကို သိရှိနားလည်ရန် ဆုံးမထားသော စကားပုံဖြစ်သည်။\end{myanmar}
+    \vspace{1em}
+    
+    \item \begin{myanmar}\textbf{ပညာရဲရင့် ပွဲလယ်တင့်။}\\
+    ပညာတတ်မြောက်ထားသူသည် မည်သည့်နေရာ၊ မည်သည့်ပရိသတ်အလယ်တွင်မဆို ရဲဝင့်စွာ ပြောဆိုလုပ်ကိုင်နိုင်ပြီး တင့်တယ်နေတတ်သည်။\end{myanmar}
+    \vspace{1em}
+    
+    \item \begin{myanmar}\textbf{ဆင်ဖြူတော်မှီ၍ ကြံစုပ်။}\\
+    တန်ခိုးအာဏာရှိသူ၊ ဩဇာတိက္ကမ ကြီးမားသူများကို အမှီပြု၍ မိမိကိုယ်ကျိုးအတွက် အခွင့်အရေးရယူခြင်းကို တင်စားထားခြင်း ဖြစ်သည်။\end{myanmar}
+    \vspace{1em}
+    
+    \item \begin{myanmar}\textbf{မီးများမီးနိုင်၊ ရေများရေနိုင်။}\\
+    ခွန်အားချင်း ယှဉ်ပြိုင်ရာတွင် အင်အားပိုမိုကြီးမားသူက အနိုင်ရရှိတတ်ကြောင်းကို ညွှန်းဆိုထားသည်။\end{myanmar}
+\end{enumerate}
+
+% ==================================================
+% COLOPHON / TECHNICAL DETAILS
+% ==================================================
+\chapter*{\textmyanmar{အသုံးပြုထားသော နည်းပညာနှင့် စာမျက်နှာပုံစံများ}}
+\addcontentsline{toc}{chapter}{\textmyanmar{နည်းပညာ မှတ်တမ်း}}
+
+\begin{myanmar}
+ဤစာအုပ်ငယ်အား နိုင်ငံတကာအဆင့်မီ စာစီစာရိုက်စနစ်ဖြစ်သော LaTeX ကို အသုံးပြု၍ ဖန်တီးထားခြင်း ဖြစ်ပါသည်။ အသုံးပြုထားသော နည်းပညာနှင့် ပုံစံချထားမှု အသေးစိတ်မှာ အောက်ပါအတိုင်း ဖြစ်ပါသည် --
+\end{myanmar}
+
+\vspace{1.5em}
+
+\begin{itemize}
+    \renewcommand{\labelitemi}{\textcolor{accentcolor}{\textbf{--}}}
+    
+    \item \begin{myanmar}\textbf{စာရွက်အရွယ်အစား (Paper Size)} : A4\end{myanmar}
+    \vspace{0.5em}
+    
+    \item \begin{myanmar}\textbf{စာမျက်နှာဘောင် (Margins)} : အပေါ်နှင့် အောက် \myanmarnumber{25} မီလီမီတာ၊ ဘယ်နှင့် ညာ \myanmarnumber{20} မီလီမီတာ\end{myanmar}
+    \vspace{0.5em}
+    
+    \item \begin{myanmar}\textbf{အသုံးပြုထားသော ဖောင့် (Font)} : ပြည်ထောင်စု (Pyidaungsu)\end{myanmar}
+    \vspace{0.5em}
+    
+    \item \begin{myanmar}\textbf{အဓိက Package များ} : \end{myanmar}
+    \begin{itemize}
+        \renewcommand{\labelitemii}{\textcolor{brandcolor}{$\circ$}}
+        \item \texttt{myanmar} \begin{myanmar}(မြန်မာစာနှင့် ဂဏန်းများ အလိုအလျောက် ပြောင်းလဲရန်)\end{myanmar}
+        \item \texttt{geometry} \begin{myanmar}(စာမျက်နှာဘောင်များ သတ်မှတ်ရန်)\end{myanmar}
+        \item \texttt{titlesec} \begin{myanmar}(အခန်းခေါင်းစဉ်များ ပုံစံချရန်)\end{myanmar}
+        \item \texttt{fancyhdr} \begin{myanmar}(ခေါင်းစီးနှင့် အောက်ခြေစာသားများအတွက်)\end{myanmar}
+        \item \texttt{hyperref}, \texttt{xcolor}, \texttt{microtype}, \texttt{parskip} \begin{myanmar}စသည်တို့ ပါဝင်ပါသည်။\end{myanmar}
+    \end{itemize}
+\end{itemize}
 
 \end{document}

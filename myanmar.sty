@@ -7,8 +7,11 @@
 %% myanmar.dtx  (with options: `package')
 %% ----------------------------------------------------------------
 %% The myanmar package
-%% Copyright (C) 2026 by Myanmar TeX Project
-%% Released under the MIT License
+%% Copyright (C) 2026 Laitei (laitei.dev)
+%%
+%% Released under the LaTeX Project Public License (LPPL) ---
+%% Version 1.3c (2008-05-04).
+%% See the LICENSE file distributed with this source for the full text.
 %% ----------------------------------------------------------------
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3, l3keys2e, iftex, xparse}
@@ -62,17 +65,19 @@
 
 \cs_new_protected:Npn \myanmar_number:n #1
   {
-    \tl_set:Nn \l_tmpa_tl { #1 }
-    \tl_replace_all:Nnn \l_tmpa_tl { 0 } { ၀ } % U+1040
-    \tl_replace_all:Nnn \l_tmpa_tl { 1 } { ၁ } % U+1041
-    \tl_replace_all:Nnn \l_tmpa_tl { 2 } { ၂ } % U+1042
-    \tl_replace_all:Nnn \l_tmpa_tl { 3 } { ၃ } % U+1043
-    \tl_replace_all:Nnn \l_tmpa_tl { 4 } { ၄ } % U+1044
-    \tl_replace_all:Nnn \l_tmpa_tl { 5 } { ၅ } % U+1045
-    \tl_replace_all:Nnn \l_tmpa_tl { 6 } { ၆ } % U+1046
-    \tl_replace_all:Nnn \l_tmpa_tl { 7 } { ၇ } % U+1047
-    \tl_replace_all:Nnn \l_tmpa_tl { 8 } { ၈ } % U+1048
-    \tl_replace_all:Nnn \l_tmpa_tl { 9 } { ၉ } % U+1049
+    % Expand the argument once so macros like \arabic{page} are expanded
+    \tl_set:Nx \l_tmpa_tl { #1 }
+    % Replace ASCII digits with Myanmar digits (no stray spaces in targets)
+    \tl_replace_all:Nnn \l_tmpa_tl {0} {၀} % U+1040
+    \tl_replace_all:Nnn \l_tmpa_tl {1} {၁} % U+1041
+    \tl_replace_all:Nnn \l_tmpa_tl {2} {၂} % U+1042
+    \tl_replace_all:Nnn \l_tmpa_tl {3} {၃} % U+1043
+    \tl_replace_all:Nnn \l_tmpa_tl {4} {၄} % U+1044
+    \tl_replace_all:Nnn \l_tmpa_tl {5} {၅} % U+1045
+    \tl_replace_all:Nnn \l_tmpa_tl {6} {၆} % U+1046
+    \tl_replace_all:Nnn \l_tmpa_tl {7} {၇} % U+1047
+    \tl_replace_all:Nnn \l_tmpa_tl {8} {၈} % U+1048
+    \tl_replace_all:Nnn \l_tmpa_tl {9} {၉} % U+1049
     \myanmarfont \l_tmpa_tl
   }
 

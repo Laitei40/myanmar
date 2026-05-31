@@ -3,13 +3,13 @@
 \iffalse
 %</internal>
 %<*readme>
-The myanmar package
-===================
-Comprehensive Unicode-first Myanmar script support for XeLaTeX and LuaLaTeX.
+The myanmar-script package
+==========================
+Small helpers for Myanmar-script (Burmese-focused) typesetting with XeLaTeX and LuaLaTeX.
 %</readme>
 %<*driver>
 \documentclass{ltxdoc}
-\usepackage[font=noto, language=burmese]{myanmar}
+\usepackage[font=noto, language=burmese]{myanmar-script}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
@@ -19,17 +19,16 @@ Comprehensive Unicode-first Myanmar script support for XeLaTeX and LuaLaTeX.
 %</driver>
 % \fi
 %
-% \title{The \textsf{myanmar} package}
+% \title{The \textsf{myanmar-script} package}
 % \author{Myanmar TeX Project}
 % \date{2026/05/29 v1.0}
 % \maketitle
 %
 % \section{Introduction}
 %
-% The \textsf{myanmar} package provides Unicode-first typesetting support for
-% the Myanmar script, including Burmese, Shan, Mon, and Karen variants. It
-% requires a Unicode engine (\textsf{XeLaTeX} or Lua\LaTeX{}) and OpenType
-% Myanmar fonts.
+% The \textsf{myanmar-script} package provides a small set of helpers for
+% Unicode Myanmar-script typesetting (Burmese-focused). It requires a Unicode
+% engine (\textsf{XeLaTeX} or Lua\LaTeX{}) and OpenType Myanmar fonts.
 %
 % Supported font presets are \texttt{noto}, \texttt{pyidaungsu},
 % \texttt{myanmartext}, \texttt{padauk}, and \texttt{tharlon}.
@@ -43,7 +42,7 @@ Comprehensive Unicode-first Myanmar script support for XeLaTeX and LuaLaTeX.
 % Use the \texttt{myanmar} environment for paragraph or block Myanmar text.
 %
 % \DescribeMacro{\myanmarnumber}
-% Converts standard Arabic digits to Myanmar numerals:
+% Converts standard Arabic digits to Myanmar numerals (simple replacement):
 % \cs{myanmarnumber}\{2026\}.
 %
 % \StopEventually{\PrintIndex}
@@ -54,8 +53,8 @@ Comprehensive Unicode-first Myanmar script support for XeLaTeX and LuaLaTeX.
 \NeedsTeXFormat{LaTeX2e}
 \RequirePackage{expl3, l3keys2e, iftex, xparse}
 
-\ProvidesExplPackage {myanmar} {2026/05/29} {1.0}
-  {Comprehensive Myanmar script support}
+\ProvidesExplPackage {myanmar-script} {2026/05/29} {1.0}
+  {Basic Myanmar-script helpers (Burmese-focused)}
 
 % Ensure Unicode engine
 \bool_if:nF { \sys_if_engine_xetex_p: || \sys_if_engine_luatex_p: }
@@ -82,9 +81,6 @@ Comprehensive Unicode-first Myanmar script support for XeLaTeX and LuaLaTeX.
 
     language  .choice:,
     language / burmese    .code:n = \tl_set:Nn \l_myanmar_lang_tl { burmese },
-    language / shan       .code:n = \tl_set:Nn \l_myanmar_lang_tl { shan },
-    language / mon        .code:n = \tl_set:Nn \l_myanmar_lang_tl { mon },
-    language / sgawkaren  .code:n = \tl_set:Nn \l_myanmar_lang_tl { sgawkaren },
     language  .initial:n = burmese,
   }
 

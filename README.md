@@ -1,30 +1,30 @@
-# The `myanmar` Package
+# The `myanmar-script` Package
 
-`myanmar` is a LaTeX package for Unicode Myanmar-script typesetting with
-XeLaTeX and LuaLaTeX. It provides a small, modern interface for selecting a
-Myanmar font, writing inline or block Myanmar text, converting Arabic digits to
-Myanmar digits, and applying basic Burmese document-string localization.
+`myanmar-script` is a small LaTeX package that provides helpers for Unicode
+Myanmar-script typesetting with XeLaTeX and LuaLaTeX. Its scope is intentionally
+limited: font selection, simple inline/block text wrappers, digit conversion,
+and a basic Burmese localization hook.
 
 The package is written as a documented LaTeX source package. The main source is
-`myanmar.dtx`, and `myanmar.ins` extracts the generated `myanmar.sty` file with
+`myanmar.dtx`, and `myanmar.ins` extracts the generated `myanmar-script.sty` file with
 DocStrip.
 
 ## Status
 
-This package is currently an early package skeleton. The core user interface is
-present, but language-specific typography and localization beyond Burmese are
-still minimal.
+This package is deliberately minimal. It focuses on basic font handling and
+small utilities for Burmese (Myanmar) text. More advanced language- or
+typography-specific features are not implemented in this release.
 
 ## Features
 
-- Unicode-first Myanmar text input.
+- Unicode-first Myanmar (Burmese) text input.
 - XeLaTeX and LuaLaTeX support through `fontspec`.
 - Engine check that stops compilation under pdfLaTeX.
 - Built-in font choices for common Myanmar fonts.
 - Inline command for short Myanmar text.
 - Environment for paragraph or block Myanmar text.
-- Arabic digit to Myanmar digit conversion.
-- Basic Burmese names for common LaTeX document strings.
+- Arabic digit to Myanmar digit conversion (simple replacement).
+- Basic Burmese names for a few LaTeX document strings.
 - DocStrip package layout with `myanmar.dtx` and `myanmar.ins`.
 
 ## Requirements
@@ -83,7 +83,7 @@ myanmar/
 |-- latexmkrc
 |-- myanmar.dtx
 |-- myanmar.ins
-|-- myanmar.sty
+|-- myanmar-script.sty
 |-- .github/
 |   |-- .github.code-workspace
 |   `-- FUNDING.yml
@@ -102,8 +102,8 @@ File roles:
 - `.gitignore` excludes generated LaTeX build files.
 - `latexmkrc` configures `latexmk` to use XeLaTeX.
 - `myanmar.dtx` is the documented package source.
-- `myanmar.ins` extracts `myanmar.sty` from `myanmar.dtx`.
-- `myanmar.sty` is the generated package file used by LaTeX documents.
+- `myanmar.ins` extracts `myanmar-script.sty` from `myanmar.dtx`.
+- `myanmar-script.sty` is the generated package file used by LaTeX documents.
 - `.github/` contains repository metadata.
 - `docs/manual.tex` is a standalone manual source.
 - `docs/manual.pdf` is the generated manual PDF.
@@ -121,17 +121,17 @@ latex myanmar.ins
 This generates:
 
 ```text
-myanmar.sty
+myanmar-script.sty
 ```
 
-For local testing, keep `myanmar.sty` beside the document you are compiling, or
+For local testing, keep `myanmar-script.sty` beside the document you are compiling, or
 compile from this repository root so TeX can find it.
 
-For a user-level installation, copy the generated `myanmar.sty` into a local
+For a user-level installation, copy the generated `myanmar-script.sty` into a local
 TeX tree. For example:
 
 ```text
-texmf/tex/latex/myanmar/myanmar.sty
+texmf/tex/latex/myanmar-script/myanmar-script.sty
 ```
 
 Then refresh the filename database if your TeX distribution requires it.
@@ -142,7 +142,7 @@ Then refresh the filename database if your TeX distribution requires it.
 % !TeX program = xelatex
 \documentclass{article}
 
-\usepackage[font=noto, language=burmese]{myanmar}
+\usepackage[font=noto, language=burmese]{myanmar-script}
 
 \begin{document}
 
@@ -184,12 +184,12 @@ Options are passed with key-value syntax:
 Selects the Myanmar font family.
 
 ```tex
-\usepackage[font=noto]{myanmar}
-\usepackage[font=pyidaungsu]{myanmar}
-\usepackage[font=myanmartext]{myanmar}
-\usepackage[font=myanmar-text]{myanmar}
-\usepackage[font=padauk]{myanmar}
-\usepackage[font=tharlon]{myanmar}
+\usepackage[font=noto]{myanmar-script}
+\usepackage[font=pyidaungsu]{myanmar-script}
+\usepackage[font=myanmartext]{myanmar-script}
+\usepackage[font=myanmar-text]{myanmar-script}
+\usepackage[font=padauk]{myanmar-script}
+\usepackage[font=tharlon]{myanmar-script}
 ```
 
 Available values:
@@ -211,32 +211,16 @@ font=noto
 
 ### `language`
 
-Selects the target Myanmar-script language variant.
-
-```tex
-\usepackage[language=burmese]{myanmar}
-\usepackage[language=shan]{myanmar}
-\usepackage[language=mon]{myanmar}
-\usepackage[language=sgawkaren]{myanmar}
-```
-
-Available values:
-
-| Value | Language |
-| --- | --- |
-| `burmese` | Burmese |
-| `shan` | Shan |
-| `mon` | Mon |
-| `sgawkaren` | S'gaw Karen |
+This package currently only implements a `language=burmese` localization
+hook. Other language-specific behavior is not implemented in this release and
+the package does not claim full support for Shan, Mon, S'gaw Karen, or other
+Myanmar-script variants.
 
 Default:
 
 ```tex
 language=burmese
 ```
-
-At present, Burmese has the basic localization hook. Other language options are
-reserved for future language-specific behavior.
 
 ## Commands
 
@@ -283,20 +267,10 @@ The current implementation performs a direct digit replacement for `0` through
 
 ## Localization
 
-When `language=burmese` is selected, the package currently defines basic
-Burmese names for common LaTeX document strings at the beginning of the
-document.
-
-The implementation currently covers strings such as:
-
-- `\contentsname`
-- `\chaptername`
-- `\figurename`
-- `\tablename`
-- `\bibname`
-
-Additional language-specific strings for Shan, Mon, and S'gaw Karen are planned
-for future development.
+If `language=burmese` is selected, the package defines basic Burmese names for
+a small set of common LaTeX document strings (e.g. `\contentsname`,
+`\figurename`). This is intentionally limited and not a full localization
+package.
 
 ## Example Document
 
@@ -323,7 +297,7 @@ If `latexmkrc` is present, `latexmk` should use XeLaTeX automatically.
 ## Generating Documentation
 
 The package source is documented in `myanmar.dtx`. After extracting
-`myanmar.sty`, generate the package documentation with XeLaTeX:
+`myanmar-script.sty`, generate the package documentation with XeLaTeX:
 
 ```sh
 latex myanmar.ins
@@ -461,7 +435,7 @@ Use this document to check that your setup works:
 ```tex
 % !TeX program = xelatex
 \documentclass{article}
-\usepackage[font=noto, language=burmese]{myanmar}
+\usepackage[font=noto, language=burmese]{myanmar-script}
 
 \begin{document}
 \textmyanmar{မြန်မာစာ}

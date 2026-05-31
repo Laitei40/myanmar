@@ -1,108 +1,21 @@
-%%
-%% This is file `myanmar.sty',
-%% generated with the docstrip utility.
-%%
-%% The original source files were:
-%%
-%% myanmar.dtx  (with options: `package')
-%% ----------------------------------------------------------------
-%% The myanmar package
-%% Copyright (C) 2026 Laitei (laitei.dev)
-%%
-%% Released under the LaTeX Project Public License (LPPL) ---
-%% Version 1.3c (2008-05-04).
-%% See the LICENSE file distributed with this source for the full text.
-%% ----------------------------------------------------------------
+%% Compatibility shim for the package rename
 \NeedsTeXFormat{LaTeX2e}
-\RequirePackage{expl3, l3keys2e, iftex, xparse}
+\ProvidesPackage{myanmar}[2026/05/29 v1.0 Compatibility shim — load myanmar-script]
 
-\ProvidesExplPackage {myanmar} {2026/05/29} {1.0}
-  {Comprehensive Myanmar script support}
+% Inform the user that the package id has been renamed to avoid a confusing
+% authoritative package id on CTAN. This shim loads the real implementation
+% from `myanmar-script.sty` if available.
+\PackageWarning{myanmar}{The package `myanmar' has been renamed to `myanmar-script'.\MessageBreak Please use `myanmar-script' when possible; this shim will load the real package if found.}
 
-\bool_if:nF { \sys_if_engine_xetex_p: || \sys_if_engine_luatex_p: }
-  {
-    \msg_new:nnnn { myanmar } { fatal-engine }
-      { The~myanmar~package~requires~XeLaTeX~or~LuaLaTeX. }
-      { You~are~using~pdfLaTeX.~Please~change~your~engine. }
-    \msg_fatal:nn { myanmar } { fatal-engine }
-  }
-
-\RequirePackage{fontspec}
-
-\keys_define:nn { myanmar }
-  {
-    font      .choice:,
-    font / noto        .code:n = \tl_set:Nn \l_myanmar_font_tl { Noto~Sans~Myanmar },
-    font / pyidaungsu  .code:n = \tl_set:Nn \l_myanmar_font_tl { Pyidaungsu },
-    font / myanmartext .code:n = \tl_set:Nn \l_myanmar_font_tl { Myanmar~Text },
-    font / myanmar-text .code:n = \tl_set:Nn \l_myanmar_font_tl { Myanmar~Text },
-    font / padauk      .code:n = \tl_set:Nn \l_myanmar_font_tl { Padauk },
-    font / tharlon     .code:n = \tl_set:Nn \l_myanmar_font_tl { Tharlon },
-    font      .initial:n = noto,
-
-    language  .choice:,
-    language / burmese    .code:n = \tl_set:Nn \l_myanmar_lang_tl { burmese },
-    language / shan       .code:n = \tl_set:Nn \l_myanmar_lang_tl { shan },
-    language / mon        .code:n = \tl_set:Nn \l_myanmar_lang_tl { mon },
-    language / sgawkaren  .code:n = \tl_set:Nn \l_myanmar_lang_tl { sgawkaren },
-    language  .initial:n = burmese,
-  }
-
-\ProcessKeysOptions { myanmar }
-
-\newfontfamily\myanmarfont{\l_myanmar_font_tl}[
-  Script=Myanmar,
-  Renderer=HarfBuzz, % Crucial for LuaLaTeX shaping
-  Scale=MatchLowercase
-]
-
-\NewDocumentCommand{\textmyanmar}{ m }
-  { {\myanmarfont #1} }
-
-\NewDocumentEnvironment{myanmar}{}
-  { \myanmarfont }
-  { }
-
-\cs_new_protected:Npn \myanmar_number:n #1
-  {
-    % Expand the argument once so macros like \arabic{page} are expanded
-    \tl_set:Nx \l_tmpa_tl { #1 }
-    % Replace ASCII digits with Myanmar digits (no stray spaces in targets)
-    \tl_replace_all:Nnn \l_tmpa_tl {0} {၀} % U+1040
-    \tl_replace_all:Nnn \l_tmpa_tl {1} {၁} % U+1041
-    \tl_replace_all:Nnn \l_tmpa_tl {2} {၂} % U+1042
-    \tl_replace_all:Nnn \l_tmpa_tl {3} {၃} % U+1043
-    \tl_replace_all:Nnn \l_tmpa_tl {4} {၄} % U+1044
-    \tl_replace_all:Nnn \l_tmpa_tl {5} {၅} % U+1045
-    \tl_replace_all:Nnn \l_tmpa_tl {6} {၆} % U+1046
-    \tl_replace_all:Nnn \l_tmpa_tl {7} {၇} % U+1047
-    \tl_replace_all:Nnn \l_tmpa_tl {8} {၈} % U+1048
-    \tl_replace_all:Nnn \l_tmpa_tl {9} {၉} % U+1049
-    \myanmarfont \l_tmpa_tl
-  }
-
-\NewDocumentCommand{\myanmarnumber}{ m }
-  { \myanmar_number:n { #1 } }
-
-\cs_new_protected:Npn \myanmar_setup_captions:
-  {
-    \tl_if_eq:NnT \l_myanmar_lang_tl { burmese }
-      {
-        \def\contentsname{{\myanmarfont မာတိကာ}}
-        \def\chaptername{{\myanmarfont အခန်း}}
-        \def\figurename{{\myanmarfont ပုံ}}
-        \def\tablename{{\myanmarfont ဇယား}}
-        \def\bibname{{\myanmarfont ကျမ်းကိုးစာရင်း}}
-        \def\appendixname{{\myanmarfont နောက်ဆက်တွဲ}}
-        \def\indexname{{\myanmarfont အညွှန်း}}
-      }
-    % Additional language conditionals go here.
-  }
-
-\AtBeginDocument{
-  \myanmar_setup_captions:
+\IfFileExists{myanmar-script.sty}{
+  \RequirePackage{myanmar-script}
+}{
+  \PackageWarning{myanmar}{Could not find `myanmar-script.sty'.\MessageBreak Falling back to built-in (minimal) definitions.}
+  % Minimal fallback so documents don't completely fail; keep behaviour small
+  \RequirePackage{fontspec}
+  \newcommand{\textmyanmar}[1]{{#1}}
+  \newenvironment{myanmar}{}{}
+  \newcommand{\myanmarnumber}[1]{#1}
 }
 
 \endinput
-%%
-%% End of file `myanmar.sty'.

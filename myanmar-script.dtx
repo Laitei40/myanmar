@@ -1,12 +1,4 @@
 % \iffalse meta-comment
-%<*internal>
-\iffalse
-%</internal>
-%<*readme>
-The myanmar-script package
-==========================
-Small helpers for Myanmar-script (Burmese-focused) typesetting with XeLaTeX and LuaLaTeX.
-%</readme>
 %<*driver>
 \documentclass{ltxdoc}
 \usepackage[font=noto, language=burmese]{myanmar-script}
@@ -14,39 +6,47 @@ Small helpers for Myanmar-script (Burmese-focused) typesetting with XeLaTeX and 
 \CodelineIndex
 \RecordChanges
 \begin{document}
-  \DocInput{myanmar.dtx}
+  \DocInput{myanmar-script.dtx}
 \end{document}
 %</driver>
 % \fi
-%
+
+% \iffalse
+%<*readme>
+The myanmar-script package
+==========================
+Small helpers for Myanmar-script (Burmese-focused) typesetting with XeLaTeX and LuaLaTeX.
+%</readme>
+% \fi
+
 % \title{The \textsf{myanmar-script} package}
 % \author{Myanmar TeX Project}
 % \date{2026/05/29 v1.0}
 % \maketitle
-%
+
 % \section{Introduction}
-%
+
 % The \textsf{myanmar-script} package provides a small set of helpers for
 % Unicode Myanmar-script typesetting (Burmese-focused). It requires a Unicode
 % engine (\textsf{XeLaTeX} or Lua\LaTeX{}) and OpenType Myanmar fonts.
-%
+
 % Supported font presets are \texttt{noto}, \texttt{pyidaungsu},
 % \texttt{myanmartext}, \texttt{padauk}, and \texttt{tharlon}.
-%
+
 % \section{Usage}
-%
+
 % \DescribeMacro{\textmyanmar}
 % Use \cs{textmyanmar}\marg{text} for inline Myanmar text.
-%
+
 % \DescribeEnv{myanmar}
 % Use the \texttt{myanmar} environment for paragraph or block Myanmar text.
-%
+
 % \DescribeMacro{\myanmarnumber}
 % Converts standard Arabic digits to Myanmar numerals (simple replacement):
 % \cs{myanmarnumber}\{2026\}.
-%
+
 % \StopEventually{\PrintIndex}
-%
+
 % \section{Implementation}
 % \begin{macrocode}
 %<*package>
@@ -104,17 +104,17 @@ Small helpers for Myanmar-script (Burmese-focused) typesetting with XeLaTeX and 
 % 4. Numeral Conversion (Arabic to Myanmar U+1040 - U+1049)
 \cs_new_protected:Npn \myanmar_number:n #1
   {
-    \tl_set:Nn \l_tmpa_tl { #1 }
-    \tl_replace_all:Nnn \l_tmpa_tl { 0 } { ၀ } % U+1040
-    \tl_replace_all:Nnn \l_tmpa_tl { 1 } { ၁ } % U+1041
-    \tl_replace_all:Nnn \l_tmpa_tl { 2 } { ၂ } % U+1042
-    \tl_replace_all:Nnn \l_tmpa_tl { 3 } { ၃ } % U+1043
-    \tl_replace_all:Nnn \l_tmpa_tl { 4 } { ၄ } % U+1044
-    \tl_replace_all:Nnn \l_tmpa_tl { 5 } { ၅ } % U+1045
-    \tl_replace_all:Nnn \l_tmpa_tl { 6 } { ၆ } % U+1046
-    \tl_replace_all:Nnn \l_tmpa_tl { 7 } { ၇ } % U+1047
-    \tl_replace_all:Nnn \l_tmpa_tl { 8 } { ၈ } % U+1048
-    \tl_replace_all:Nnn \l_tmpa_tl { 9 } { ၉ } % U+1049
+    \tl_set:Nx \l_tmpa_tl { #1 }
+    \tl_replace_all:Nnn \l_tmpa_tl {0} {၀} % U+1040
+    \tl_replace_all:Nnn \l_tmpa_tl {1} {၁} % U+1041
+    \tl_replace_all:Nnn \l_tmpa_tl {2} {၂} % U+1042
+    \tl_replace_all:Nnn \l_tmpa_tl {3} {၃} % U+1043
+    \tl_replace_all:Nnn \l_tmpa_tl {4} {၄} % U+1044
+    \tl_replace_all:Nnn \l_tmpa_tl {5} {၅} % U+1045
+    \tl_replace_all:Nnn \l_tmpa_tl {6} {၆} % U+1046
+    \tl_replace_all:Nnn \l_tmpa_tl {7} {၇} % U+1047
+    \tl_replace_all:Nnn \l_tmpa_tl {8} {၈} % U+1048
+    \tl_replace_all:Nnn \l_tmpa_tl {9} {၉} % U+1049
     \myanmarfont \l_tmpa_tl
   }
 

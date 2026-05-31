@@ -1,3 +1,67 @@
+# myanmar
+
+Utilities and LaTeX package for typesetting Myanmar (Burmese) script.
+
+## Overview
+
+This repository provides a small LaTeX package and documentation to help typeset
+Myanmar (Burmese) text in XeLaTeX and LuaLaTeX. The package offers font helpers,
+numeral conversion, and basic localization hooks.
+
+## Contents
+
+- `myanmar-script.dtx` — documented source (docstrip + package implementation)
+- `myanmar-script.sty` — package file generated from the `.dtx`
+- `myanmar.sty` — an alternative package wrapper
+- `docs/manual.tex` — longer manual source for the package
+- `examples/` — example documents demonstrating usage
+
+## Requirements
+
+- XeLaTeX or LuaLaTeX (XeTeX recommended for font support)
+- latexmk (recommended) or your preferred TeX build tool
+- A modern TeX distribution (MiKTeX or TeX Live) with `fontspec` and `expl3`
+
+## Build documentation
+
+To build the package documentation (PDF) using the provided driver, run:
+
+```bash
+latexmk -xelatex myanmar-script.tex
+```
+
+If you prefer to build directly from the `.dtx`, you can run:
+
+```bash
+latexmk -xelatex myanmar-script.dtx
+```
+
+Note: The `.dtx` is both the documented source and the implementation. If you
+encounter docstrip errors during build, try the driver `myanmar-script.tex`.
+
+## Usage
+
+In your document preamble:
+
+```latex
+\usepackage{myanmar-script}
+% then use the provided commands/environments (see the manual)
+```
+
+Check `examples/example.tex` for a minimal usage example.
+
+## Contributing
+
+Contributions and bug reports are welcome. Please open issues or pull
+requests describing the change and how to reproduce any problems.
+
+## License
+
+This project is released under the terms of the included `LICENSE` file.
+
+## Contact
+
+For questions, open an issue or contact the maintainer via the repository.
 # The `myanmar-script` Package
 
 `myanmar-script` is a small LaTeX package that provides helpers for Unicode

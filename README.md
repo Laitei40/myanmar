@@ -1,4 +1,4 @@
-# myanmar
+# myanmar-script
 
 Utilities and LaTeX package for typesetting Myanmar (Burmese) script.
 

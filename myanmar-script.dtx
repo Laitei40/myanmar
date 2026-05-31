@@ -60,12 +60,16 @@ Small helpers for Myanmar-script (Burmese-focused) typesetting with XeLaTeX and 
 \bool_if:nF { \sys_if_engine_xetex_p: || \sys_if_engine_luatex_p: }
   {
     \msg_new:nnnn { myanmar } { fatal-engine }
-      { The~myanmar~package~requires~XeLaTeX~or~LuaLaTeX. }
-      { You~are~using~pdfLaTeX.~Please~change~your~engine. }
+      { The~myanmar-script~package~requires~XeLaTeX~or~LuaLaTeX. }
+      { Please~compile~with~XeLaTeX~or~LuaLaTeX. }
     \msg_fatal:nn { myanmar } { fatal-engine }
   }
 
 \RequirePackage{fontspec}
+
+% Variables
+\tl_new:N \l_myanmar_font_tl
+\tl_new:N \l_myanmar_lang_tl
 
 % 1. Key-Value Definitions
 \keys_define:nn { myanmar }
@@ -121,7 +125,7 @@ Small helpers for Myanmar-script (Burmese-focused) typesetting with XeLaTeX and 
 \NewDocumentCommand{\myanmarnumber}{ m }
   { \myanmar_number:n { #1 } }
 
-% 5. Localization Hook (Basic implementation)
+% 5. Localization Hook
 \cs_new_protected:Npn \myanmar_setup_captions:
   {
     \tl_if_eq:NnT \l_myanmar_lang_tl { burmese }
@@ -134,7 +138,6 @@ Small helpers for Myanmar-script (Burmese-focused) typesetting with XeLaTeX and 
         \def\appendixname{{\myanmarfont နောက်ဆက်တွဲ}}
         \def\indexname{{\myanmarfont အညွှန်း}}
       }
-    % Additional language conditionals go here.
   }
 
 \AtBeginDocument{

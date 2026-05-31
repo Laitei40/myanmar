@@ -145,8 +145,8 @@ myanmar/
 |-- LICENSE
 |-- .gitignore
 |-- latexmkrc
-|-- myanmar.dtx
-|-- myanmar.ins
+|-- myanmar-script.dtx
+|-- myanmar-script.ins
 |-- myanmar-script.sty
 |-- .github/
 |   |-- .github.code-workspace
